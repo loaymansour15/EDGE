@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Pricing{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-4" style="background-color: #f3f4f6; width: 100%; padding: 40px 20px; border-radius: 10px;">
+    <h3 class="fw-bold mb-1">اشتراك EDGE</h3>
+    <p class="text-muted mb-0">كل المحتوى مقفول… افتحه بالاشتراك الشهري</p>
+</div>
+
+<div class="row justify-content-center" dir="rtl">
+    <div class="col-lg-6 col-md-8">
+
+        <div class="card shadow border-0">
+            <div class="card-body p-4">
+
+                {% if is_valid %}
+                    <div class="alert alert-success">
+                        اشتراكك شغال ✅
+                        {% if sub.expires_at %}
+                        <div class="small mt-1">
+                            ينتهي في: {{ sub.expires_at }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid">
+                        <a href="/dashboard/" class="btn btn-dark btn-lg">
+                            دخول للمنصة →
+                        </a>
+                    </div>
+
+                {% else %}
+                    <!-- السعر -->
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-1">شهري</h5>
+                        <div class="d-flex align-items-baseline gap-2">
+                            <span class="display-6 fw-bold">{{ plan.price_egp }}</span>
+                            <span class="text-muted">جنيه مصري</span>
+                        </div>
+                        <p class="text-muted mb-0">
+                            وصول كامل لكل الدروس + الكويزات + السيناريوهات + الداشبورد
+                        </p>
+                    </div>
+
+                    <!-- المميزات -->
+                    <ul class="list-unstyled mb-4">
+                        <li class="mb-2">✅ فيديوهات قصيرة مركزة</li>
+                        <li class="mb-2">✅ MCQ + شرح للإجابات الغلط</li>
+                        <li class="mb-2">✅ سيناريوهات عملية على الشارت</li>
+                        <li class="mb-2">✅ متابعة مستوى وتقدّم</li>
+                    </ul>
+
+                    <!-- InstaPay -->
+                    <div class="border-top pt-4">
+                        <h5 class="fw-bold mb-3">الدفع عبر InstaPay</h5>
+
+                        <p><strong>المبلغ:</strong> {{ plan.price_egp }} جنيه</p>
+                        <p><strong>InstaPay (المستلم):</strong> {{ receiver }}</p>
+
+                        <div class="alert alert-warning text-center fw-bold">
+                            اكتب الكود ده في خانة الوصف أثناء التحويل
+                            <div class="mt-2 fs-5">
+                                {{ reference }}
+                            </div>
+                        </div>
+
+                        <form method="POST"
+                              action="{% url 'pricing' plan.id %}"
+                              enctype="multipart/form-data"
+                              class="mt-3">
+
+                            {% csrf_token %}
+
+                            <!-- reference ثابت -->
+                            <input type="hidden" name="reference" value="{{ reference }}">
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-danger">
+                                    صورة التحويل (إجباري)
+                                </label>
+                                <input type="file"
+                                       name="proof"
+                                       class="form-control"
+                                       accept="image/*"
+                                       required>
+                            </div>
+
+                            {% if error %}
+                                <div class="alert alert-danger small">
+                                    {{ error }}
+                                </div>
+                            {% endif %}
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-dark btn-lg">
+                                    تم التحويل ✔️
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="text-muted small mt-3 text-center">
+                            * التفعيل خلال وقت قصير بعد المراجعة
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

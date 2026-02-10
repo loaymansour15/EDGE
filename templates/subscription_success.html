@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Subscription Active{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="col-md-6">
+
+        <div class="card shadow border-0 text-center">
+            <div class="card-body p-5">
+
+                <div class="mb-4">
+                    <div class="rounded-circle bg-success-subtle d-inline-flex
+                                align-items-center justify-content-center"
+                         style="width: 70px; height: 70px;">
+                        <span class="fs-2">✅</span>
+                    </div>
+                </div>
+
+                <h3 class="fw-bold mb-2">
+                    تم تفعيل اشتراكك
+                </h3>
+
+                <p class="text-muted mb-4">
+                    مبروك 🎉  
+                    اشتراكك اتفعل بنجاح وتقدر تبدأ فورًا
+                </p>
+
+                <a href="/dashboard/" class="btn btn-dark btn-lg">
+                    دخول الداشبورد
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

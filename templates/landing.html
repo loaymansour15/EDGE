@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ SITE_NAME }} | {{ SITE_TAGLINE }}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light" dir="rtl">
+
+{% if request.GET.logged_out %}
+<div class="alert alert-success text-center mb-0">
+    تم تسجيل الخروج بنجاح
+</div>
+{% endif %}
+
+<!-- ================= HERO ================= -->
+<section class="bg-dark text-white py-5">
+    <div class="container text-center">
+        <h1 class="display-3 fw-bold mb-2">
+            {{ SITE_NAME }}
+        </h1>
+        <p class="text-secondary mb-4">
+            {{ SITE_TAGLINE }}
+        </p>
+
+        <h3 class="fw-bold mb-3">
+            اتعلم البورصة صح… قبل ما السوق يعلمك غصب
+        </h3>
+
+        <p class="lead mb-4">
+            مش كورس، ومش شوية فيديوهات.  
+            هنا بتتعلم **تفكر، تجرّب، وتاخد قرار**  
+            قبل ما تحط جنيه واحد في السوق.
+        </p>
+
+        <a href="#section-pricing" class="btn btn-success btn-lg px-5">
+            ابدأ تتعلم دلوقتي
+        </a>
+    </div>
+</section>
+
+<!-- ================= PROBLEM ================= -->
+<section class="py-5" dir="rtl">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+
+                <h3 class="fw-bold mb-4">
+                    خلّيك صريح مع نفسك
+                </h3>
+
+                <ul class="list-unstyled lead mb-4">
+                    <li>❌ دخلت البورصة وخسرت؟</li>
+                    <li>❌ سمعت عن التحليل الفني ومش فاهمه؟</li>
+                    <li>❌ حد قالك اشتري وبعت على خسارة؟</li>
+                    <li>❌ حاسس إن السوق دايمًا عكسك؟</li>
+                </ul>
+
+                <p class="lead">
+                    المشكلة مش فيك.  
+                    <br>
+                    المشكلة إنك دخلت سوق معقّد  
+                    <br>
+                    من غير تدريب حقيقي.
+                </p>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ================= SOLUTION ================= -->
+<section class="bg-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h3 class="fw-bold mb-3">
+                    Edge بيعمل إيه مختلف؟
+                </h3>
+
+                <p class="lead">
+                    بنعلّمك التداول بالطريقة اللي السوق بيشتغل بيها فعلًا.
+                </p>
+
+                <ul class="lead">
+                    <li>📉 تحليل فني من الصفر لحد الاحتراف</li>
+                    <li>📊 فهم حقيقي للتحليل المالي</li>
+                    <li>⚠️ إدارة المخاطر قبل التفكير في المكسب</li>
+                    <li>🔁 سيناريوهات سوق حقيقية</li>
+                    <li>🧪 تجربة قبل المخاطرة بفلوسك</li>
+                </ul>
+            </div>
+
+            <div class="col-md-6 text-center">
+                <div class="p-4 border rounded shadow-sm">
+                    <h5 class="fw-bold mb-3">التداول = قرارات</h5>
+                    <p class="text-muted">
+                        كل قرار ليه نتيجة  
+                        وإحنا بنخلّيك تشوف النتيجة  
+                        قبل ما تدفع تمنها.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= PRACTICE ================= -->
+<section class="py-5">
+    <div class="container text-center">
+        <h3 class="fw-bold mb-3">
+            كأنك في السوق… بس من غير خسارة
+        </h3>
+
+        <p class="lead">
+            تشوف التشارت  
+            <br>
+            تاخد القرار  
+            <br>
+            وتشوف النتيجة بعينك
+        </p>
+    </div>
+</section>
+
+<!-- ================= PRICING ================= -->
+<section class="bg-dark text-white py-5" id="section-pricing">
+    <div class="container">
+        <h3 class="fw-bold text-center mb-5">
+            خطط الأسعار
+        </h3>
+
+        <div class="row g-4 justify-content-center">
+
+            <!-- Pro -->
+            <div class="col-md-3">
+                <div class="card h-100 text-center border-success">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-success">Pro</h5>
+                        <h2 class="fw-bold my-3">200 جنيه</h2>
+                        <ul class="list-unstyled " style="padding-right: 0px;">
+                            <li>كل المحتوى التعليمي</li>
+                            <li>تحليل فني ومالي متقدم</li>
+                            <li>سيناريوهات غير محدودة</li>
+                            <li>Dashboard كامل</li>
+                        </ul>
+                        <a href="/register/" class="btn btn-success mt-3">
+                            اشترك دلوقتي
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Elite -->
+            <div class="col-md-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <h5 class="fw-bold">Elite</h5>
+                        <h2 class="fw-bold my-3">قريبًا</h2>
+                        <ul class="list-unstyled text-muted" style="padding-right: 0px;">
+                            <li>جلسات مباشرة</li>
+                            <li>تحليل حالات حقيقية</li>
+                            <li>Mentorship</li>
+                        </ul>
+                        
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="py-5 text-center">
+    <h3 class="fw-bold mb-3">
+        متدخلش السوق أعمى
+    </h3>
+    <p class="lead mb-4">
+        اتعلم… جرّب… وبعدها قرر.
+    </p>
+
+    <a href="/register/" class="btn btn-dark btn-lg px-5">
+        ابدأ رحلتك مع EDGE
+    </a>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="text-center py-4 text-muted">
+    <p>&copy; <span id="year"></span> {{ SITE_NAME }}</p>
+</footer>
+<script>
+    // Get the current year using the built-in Date object
+    const currentYear = new Date().getFullYear();
+    
+    // Find the span element with the id "year" and set its text content
+    document.getElementById('year').textContent = currentYear;
+</script>
+
+</body>
+</html>

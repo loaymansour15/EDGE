@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Payment Pending{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+
+    <div class="col-lg-6 col-md-8 col-sm-10">
+
+        <div class="card shadow border-0">
+            <div class="card-body p-5 text-center">
+
+                <!-- Icon -->
+                <div class="mb-4">
+                    <div class="rounded-circle bg-warning-subtle d-inline-flex align-items-center justify-content-center"
+                         style="width: 70px; height: 70px;">
+                        <span class="fs-2">⏳</span>
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <h3 class="fw-bold mb-2">
+                    تم استلام طلبك
+                </h3>
+
+                <!-- Subtitle -->
+                <p class="text-muted mb-4">
+                    عملية الدفع قيد المراجعة حاليًا  
+                    وسيتم تفعيل اشتراكك تلقائيًا بعد التأكيد
+                </p>
+
+                <!-- Info Box -->
+                <div class="alert alert-light border mb-4">
+                    <small class="text-muted">
+                        ⏱ عادةً ما يتم التأكيد خلال ساعة .  
+                        في حالة التأخير، لا تقلق — اشتراكك محفوظ.
+                    </small>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-grid gap-2">
+                    <a href="/dashboard/" class="btn btn-dark btn-lg">
+                        الرجوع إلى الداشبورد
+                    </a>
+
+                    <a href="{% url 'support' %}" class="btn btn-outline-secondary">
+                        تواصل مع الدعم
+                    </a>
+
+                    <button onclick="checkStatus()"
+                        class="btn btn-outline-dark">
+                        🔄 Check Payment Status
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+const STATUS_URL = "{% url 'check_subscription_status' %}";
+
+function checkStatus() {
+    fetch(STATUS_URL)
+        .then(res => res.json())
+        .then(data => {
+            if (data.active) {
+                window.location.href = "{% url 'subscription_success' %}";
+            }
+        });
+}
+
+setInterval(checkStatus, 30000);
+</script>
+
+
+{% endblock %}
+

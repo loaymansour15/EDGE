@@ -1,0 +1,19 @@
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/topics-page/">Topics</a>
+        </li>
+
+        {% if topic %}
+            <li class="breadcrumb-item">
+                <a href="/lessons/{{ topic.id }}/">{{ topic.name }}</a>
+            </li>
+        {% endif %}
+
+        {% if page %}
+            <li class="breadcrumb-item active" aria-current="page">
+                {{ page }}
+            </li>
+        {% endif %}
+    </ol>
+</nav>

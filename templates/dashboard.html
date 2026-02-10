@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h4 class="mb-4"> Dashboard</h4>
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">I have only glimpsed the tip of the iceberg.</li>
+    </ol>
+</nav>
+
+{% include "partials/breadcrumb.html" with topic=topic page="dashboard" %}
+
+
+{% if user.subscription.is_active %}
+<a href="/topics-page/" class="btn btn-dark mb-3">
+    Continue Learning →
+</a>
+<span class="badge bg-success mb-3">
+    Active
+</span>
+{% else %}
+    <a href="{% url 'pricing' plan.id %}" class="btn btn-primary mb-3">
+        Subscribe to Learn
+    </a>
+    <span class="badge bg-danger mb-3">
+        Inactive
+    </span>
+{% endif %}
+
+
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h6>Total Attempts</h6>
+                <h3>{{ total_attempts }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h6>Average Score</h6>
+                <h3>{{ average_score }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow text-center">
+            <div class="card-body">
+                <h6>Topics Completed</h6>
+                <h3>{{ topics_completed }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Chart -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <h6 class="mb-3">Performance Over Time</h6>
+        <canvas id="progressChart" height="100"></canvas>
+    </div>
+</div>
+
+
+<!-- Last Results -->
+<div class="card shadow">
+    <div class="card-body">
+        <h6 class="mb-3">Last Attempts</h6>
+
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>Scenario</th>
+                    <th>Choice</th>
+                    <th>Score</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in last_results %}
+                    <tr>
+                        <td>{{ r.scenario.title }}</td>
+                        <td>{{ r.user_choice }}</td>
+                        <td>{{ r.score }}</td>
+                        <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">
+                            No attempts yet.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('progressChart').getContext('2d');
+
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ chart_labels|safe }},
+        datasets: [{
+            label: 'Score',
+            data: {{ chart_scores|safe }},
+            borderColor: '#198754',
+            backgroundColor: 'rgba(25,135,84,0.1)',
+            tension: 0.3,
+            fill: true,
+            pointRadius: 4,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100
+            }
+        }
+    }
+});
+</script>
+
+{% endblock %}

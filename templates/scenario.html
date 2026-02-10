@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+{% block title %}Scenario{% endblock %}
+
+{% block content %}
+
+<h4 class="mb-3">{{ scenario.title }}</h4>
+
+{% include "partials/breadcrumb.html" with topic=scenario.topic page="Scenario" %}
+
+<!-- Next and previous -->
+<div class="d-flex justify-content-between align-items-center mt-4">
+    <div>
+        {% if prev_scenario %}
+            <a href="/scenarios/{{ scenario.topic.id }}/?scenario={{ prev_scenario.id }}"
+               class="btn btn-sm btn-outline-secondary">
+                ← Previous
+            </a>
+        {% endif %}
+    </div>
+
+    <div>
+        {% if answered and next_scenario %}
+            <a href="/scenarios/{{ scenario.topic.id }}/?scenario={{ next_scenario.id }}"
+               class="btn btn-sm btn-primary">
+                Next →
+            </a>
+        {% endif %}
+    </div>
+</div>
+<br>
+
+<!-- Progress -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body px-4 py-3">
+
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+                <small class="text-muted d-block">Progress</small>
+                <strong>
+                    {{ completed_scenarios }} / {{ total_scenarios }} scenarios
+                </strong>
+            </div>
+
+            <div class="text-end">
+                <span class="fw-bold fs-5">
+                    {{ progress_percent }}%
+                </span>
+            </div>
+        </div>
+
+        <div class="progress rounded-pill" style="height: 8px;">
+            <div class="progress-bar bg-success rounded-pill"
+                 role="progressbar"
+                 style="width: {{ progress_percent }}%;"
+                 aria-valuenow="{{ progress_percent }}"
+                 aria-valuemin="0"
+                 aria-valuemax="100">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<div class="row">
+
+    <!-- Chart -->
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body">
+                <div id="chart"
+                     style="height:420px;width:100%;border-radius:8px;"></div>
+
+                <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-outline-secondary btn-sm" onclick="replayScenario()">
+                        🔄 Replay
+                    </button>
+                    <button class="btn btn-outline-dark btn-sm" onclick="revealOutcome(true)">
+                        ▶ Reveal fast
+                    </button>
+                </div>
+
+                <small class="text-muted d-block mt-2">
+                    Zoom & scroll متاحين – الشارت مش هيطلع برّه البيانات
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decision -->
+    <div class="col-md-4">
+
+        <div class="card shadow mb-3">
+            <div class="card-body" dir="rtl">
+                <h6>سياق السوق</h6>
+                <p >{{ scenario.market_context }}</p>
+            </div>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body">
+                <h6 dir="rtl">القرار</h6>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <button name="choice" value="LONG" class="btn btn-success w-100 mb-2">LONG</button>
+                    <button name="choice" value="SHORT" class="btn btn-danger w-100 mb-2">SHORT</button>
+                    <button name="choice" value="NO_TRADE" class="btn btn-secondary w-100">NO TRADE</button>
+                </form>
+            </div>
+        </div>
+
+        {% if result %}
+        <div class="card shadow mt-3">
+            <div class="card-body">
+                <h6>Result</h6>
+
+                {% if result.correct %}
+                    <div class="alert alert-success">Correct ✅</div>
+                {% else %}
+                    <div class="alert alert-danger">Wrong ❌</div>
+                {% endif %}
+
+                <p><strong>Choice:</strong> {{ result.choice }}</p>
+                <p><strong>Score:</strong> {{ result.score }}</p>
+                <p dir="rtl"><strong>توضيح:</strong> {{ result.explanation }}</p>
+
+                {% if answered and next_scenario %}
+                <a href="/scenarios/{{ scenario.topic.id }}/?scenario={{ next_scenario.id }}"
+                   class="btn btn-primary w-100">
+                    Next Scenario →
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- JSON SAFE -->
+{{ scenario.chart_data|json_script:"chart-data" }}
+
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+<script>
+/* ================= DATA ================= */
+const fullData = JSON.parse(
+    document.getElementById("chart-data").textContent
+);
+
+let decisionIndex = Number("{{ scenario.decision_index|default:0 }}");
+if (!decisionIndex || decisionIndex >= fullData.length) {
+    decisionIndex = Math.floor(fullData.length * 0.7);
+}
+
+const beforeData = fullData.slice(0, decisionIndex);
+const afterData  = fullData.slice(decisionIndex);
+
+const selectedChoice = {% if result %}"{{ result.choice }}"{% else %}null{% endif %};
+
+/* ================= CHART ================= */
+const el = document.getElementById("chart");
+
+const chart = LightweightCharts.createChart(el, {
+    height: 420,
+    width: el.clientWidth,
+    layout: {
+        background: { color: "#ffffff" },
+        textColor: "#111827"
+    },
+    grid: {
+        vertLines: { color: "#e5e7eb" },
+        horzLines: { color: "#e5e7eb" }
+    },
+    timeScale: {
+        rightBarStaysOnScroll: true,
+        lockVisibleTimeRangeOnResize: true
+    }
+});
+
+let series = chart.addSeries(
+    LightweightCharts.CandlestickSeries,
+    {
+        upColor: "#16a34a",
+        downColor: "#dc2626",
+        borderUpColor: "#16a34a",
+        borderDownColor: "#dc2626",
+        wickUpColor: "#16a34a",
+        wickDownColor: "#dc2626"
+    }
+);
+
+/* ================= INIT ================= */
+series.setData(beforeData);
+
+/* تحديد نطاق العرض بدقة */
+chart.timeScale().setVisibleLogicalRange({
+    from: 0,
+    to: beforeData.length
+});
+
+/* ================= MARKER ================= */
+const markers = LightweightCharts.createSeriesMarkers(series);
+markers.setMarkers([
+    {
+        time: beforeData[beforeData.length - 1].time,
+        position: "aboveBar",
+        color: "#2563eb",
+        shape: "arrowDown",
+        text: "Decision"
+    }
+]);
+
+/* ================= COLORS ================= */
+function applyChoiceColors(choice) {
+    if (choice === "LONG") {
+        series.applyOptions({ upColor:"#16a34a", wickUpColor:"#16a34a" });
+    } else if (choice === "SHORT") {
+        series.applyOptions({ downColor:"#dc2626", wickDownColor:"#dc2626" });
+    } else if (choice === "NO_TRADE") {
+        series.applyOptions({
+            upColor:"#6b7280",
+            downColor:"#6b7280",
+            wickUpColor:"#6b7280",
+            wickDownColor:"#6b7280"
+        });
+    }
+}
+
+/* ================= REVEAL ================= */
+let timer = null;
+let idx = 0;
+
+function revealOutcome(fast=false) {
+    if (timer) return;
+
+    const speed = fast ? 60 : 220;
+
+    timer = setInterval(() => {
+        if (idx >= afterData.length) {
+            clearInterval(timer);
+            timer = null;
+            return;
+        }
+
+        series.update(afterData[idx]);
+
+        chart.timeScale().setVisibleLogicalRange({
+            from: 0,
+            to: decisionIndex + idx + 1
+        });
+
+        idx++;
+    }, speed);
+}
+
+/* ================= REPLAY ================= */
+function replayScenario() {
+    if (timer) clearInterval(timer);
+    timer = null;
+    idx = 0;
+
+    chart.removeSeries(series);
+
+    series = chart.addSeries(
+        LightweightCharts.CandlestickSeries,
+        {
+            upColor:"#16a34a",
+            downColor:"#dc2626",
+            borderUpColor:"#16a34a",
+            borderDownColor:"#dc2626",
+            wickUpColor:"#16a34a",
+            wickDownColor:"#dc2626"
+        }
+    );
+
+    series.setData(beforeData);
+
+    chart.timeScale().setVisibleLogicalRange({
+        from: 0,
+        to: beforeData.length
+    });
+
+    const m = LightweightCharts.createSeriesMarkers(series);
+    m.setMarkers(markers.markers());
+
+    if (selectedChoice) applyChoiceColors(selectedChoice);
+}
+
+/* ================= AUTO ================= */
+if (selectedChoice) {
+    applyChoiceColors(selectedChoice);
+    revealOutcome(false);
+}
+
+window.addEventListener("resize", () => {
+    chart.applyOptions({ width: el.clientWidth });
+});
+</script>
+
+
+
+{% endblock %}

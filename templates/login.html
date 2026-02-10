@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+
+    <div class="card border-0 shadow-lg" style="width: 360px;">
+        <div class="card-body p-4">
+
+            <!-- Brand -->
+            <div class="text-center mb-4">
+                <h2 class="fw-bold mb-0">{{ SITE_NAME }}</h2>
+                <small class="text-muted">{{ SITE_TAGLINE }}</small>
+            </div>
+
+            <!-- 🔴 General Errors -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger small text-center">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- Form -->
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- Username -->
+                <div class="mb-3">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.username.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Password -->
+                <div class="mb-4">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ form.password.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-dark w-100 py-2">
+                    Sign in
+                </button>
+            </form>
+
+            <!-- Register link -->
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    Don't have an account?
+                    <a href="{% url 'register' %}" class="fw-bold text-decoration-none">
+                        Create one
+                    </a>
+                    <br>
+                    Forgot your password?
+                    <a href="{% url 'password_reset' %}" class="fw-bold text-decoration-none">
+                        Reset password
+                    </a>
+                </small>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

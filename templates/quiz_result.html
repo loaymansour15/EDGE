@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Quiz Result{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-4" style="background-color: lightgray; width: 100%; padding: 40px 20px; border-radius: 8px;">
+    <h3 class="fw-bold">Quiz Result</h3>
+    <p class="text-muted mb-0">
+        شوف نتيجتك… وكمل على أساسها
+    </p>
+</div>
+
+{% include "partials/breadcrumb.html" with topic=topic page="Quiz Result" %}
+
+<div class="row justify-content-center mt-4" >
+    <div class="col-lg-6 col-md-8">
+
+        {% if not passed and wrong_answers %}
+
+        <div class="row justify-content-center" dir="rtl">
+            <div class="col-lg-8">
+
+                <div class="card shadow border-0">
+                    <div class="card-body p-4">
+
+                        <h5 class="fw-bold mb-4 text-center">
+                            الأسئلة اللي محتاجة مراجعة
+                        </h5>
+
+                        {% for w in wrong_answers %}
+                            <div class="mb-4 pb-3 border-bottom">
+
+                                <p class="fw-bold mb-1">
+                                    ❌ سؤال رقم {{ w.number }}
+                                </p>
+
+                                <p class="mb-2">
+                                    {{ w.question }}
+                                </p>
+
+                                <p class="mb-1 text-danger small">
+                                    إجابتك: {{ w.user_answer }}
+                                </p>
+
+                                <p class="mb-2 text-success small">
+                                    الإجابة الصحيحة: {{ w.correct_answer }}
+                                </p>
+
+                                <div class="alert alert-light border small mb-0">
+                                    <strong>التوضيح:</strong><br>
+                                    {{ w.explanation }}
+                                </div>
+
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+         <hr class="my-5">
+        {% endif %}
+
+
+        <div class="card shadow border-0">
+            <div class="card-body p-4 text-center">
+
+                <!-- Score -->
+                <h5 class="mb-3">
+                    Score
+                </h5>
+                <p class="fs-4 fw-bold mb-4">
+                    {{ score }} Out of {{ total }}
+                </p>
+
+                {% if passed %}
+                    <div class="alert alert-success mb-4">
+                        Passed ✅  
+                        <div class="small mt-1">
+                            جاهز تدخل السيناريوهات العملية
+                        </div>
+                    </div>
+
+                    <a href="/scenarios/{{ topic_id }}/"
+                       class="btn btn-dark btn-lg px-5">
+                        Go to Scenarios →
+                    </a>
+                {% else %}
+                    <div class="alert alert-danger mb-4">
+                        Failed ❌  
+                        <div class="small mt-1">
+                            راجع الدرس وجرب تاني
+                        </div>
+                    </div>
+
+                    <a href="javascript:history.back()"
+                       class="btn btn-outline-secondary btn-lg px-5">
+                        Retry Quiz
+                    </a>
+                {% endif %}
+
+            </div>
+        </div>
+
+        
+
+
+    </div>
+</div>
+
+{% endblock %}

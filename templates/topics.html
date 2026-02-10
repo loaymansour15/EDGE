@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Topics{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-4">
+    <h3 class="fw-bold">Choose a Topic</h3>
+    <p class="text-muted mb-0">
+        كل درس هو خطوة في رحلتك
+    </p>
+</div>
+
+{% include "partials/breadcrumb.html" with topic=topic page="topics" %}
+
+
+<div class="row justify-content-center g-4 mt-3">
+
+    {% for topic in topics %}
+    <div class="col-lg-4 col-md-6">
+
+        <div class="card h-100 shadow border-0">
+            <div class="card-body p-4 text-center d-flex flex-column">
+
+                <!-- Topic title -->
+                <h4 class="fw-bold mb-3">
+                    {{ topic.name }}
+                </h4>
+
+                {% if topic.is_locked %}
+                    <div class="mb-3">
+                        <span class="badge bg-secondary px-3 py-2">
+                            🔒 Locked
+                        </span>
+                    </div>
+
+                    <p class="text-muted mb-4">
+                        أكمل الخطوات السابقة عشان تفتح الـ Topic ده
+                    </p>
+
+                    <button class="btn btn-outline-secondary mt-auto" disabled>
+                        Locked
+                    </button>
+
+                {% else %}
+                    <div class="mb-3">
+                        <span class="badge bg-success px-3 py-2">
+                            ✅ Available
+                        </span>
+                    </div>
+
+                    <p class="text-muted mb-4">
+                        جاهز تبدأ وتدخل الدروس والاختبارات
+                    </p>
+
+                    <a href="/lessons/{{ topic.id }}/"
+                       class="btn btn-dark btn-lg mt-auto">
+                        Enter →
+                    </a>
+                {% endif %}
+
+            </div>
+        </div>
+
+    </div>
+    {% empty %}
+        <div class="text-center text-muted">
+            No topics found.
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

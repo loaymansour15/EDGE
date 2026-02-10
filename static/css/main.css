@@ -1,0 +1,23 @@
+
+.card {
+    border-radius: 12px;
+}
+
+
+body {
+    background: #f5f6f8;
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* Header (auto), main (expands), footer (auto) */
+    min-height: 100vh;
+    margin: 0; /* Remove default body margin */
+}
+
+header, main, footer {
+    /* Optional styling for visibility */
+    padding: 1rem;
+    text-align: center;
+}
+
+header, footer {
+    background-color: #f0f0f0;
+}

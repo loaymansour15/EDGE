@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Lessons{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-4" style="background-color: lightgray; width: 100%; padding: 40px 20px; border-radius: 8px;">
+    <h3 class="fw-bold">Lessons</h3>
+    <p class="text-muted mb-0">
+        شاهد الدرس… وبعدها اختبر فهمك
+    </p>
+</div>
+
+{% include "partials/breadcrumb.html" with topic=topic page="Lessons" %}
+
+<div class="row justify-content-center g-4 mt-3">
+
+    {% for lesson in lessons %}
+    <div class="col-lg-8 col-md-10">
+
+        <div class="card shadow border-0 h-100">
+            <div class="card-body p-4 text-center d-flex flex-column">
+
+                <!-- Lesson title -->
+                <h4 class="fw-bold mb-3">
+                    {{ lesson.title }}
+                    <span class="badge text-bg-success py-2">
+                            Passed ✅
+                        </span>
+                </h4>
+
+                
+                <div class="ratio ratio-16x9 mb-4 rounded overflow-hidden shadow-sm">
+                    <iframe
+                        src="{{ lesson.video_url }}"
+                        title="{{ lesson.title }}"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                
+                <!-- Video 
+                <video
+                    id="coursePlayer"
+                    controls
+                    controlsList="nodownload"
+                    disablePictureInPicture
+                    class="w-100 rounded"
+                >
+                <source src="{{ video_url }}" type="video/mp4">
+                Your browser does not support the video tag.
+                </video>
+                -->
+
+
+                <!-- CTA -->
+                <div class="mt-auto">
+                    {% if lesson.id in passed_lesson_ids %}
+                    <div class="mt-auto d-grid gap-2">
+
+                        <a href="/scenarios/{{ topic.id }}/" class="btn btn-success">
+                            Go to Scenarios →
+                        </a>
+
+                        <a href="/quiz/{{ lesson.id }}/" class="btn btn-outline-dark">
+                            Retry Quiz (optional)
+                        </a>
+                    </div>
+                        {% else %}
+                            <a href="/quiz/{{ lesson.id }}/" class="btn btn-dark mt-auto">
+                                Start Quiz
+                            </a>
+                        {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    {% empty %}
+        <div class="col-12 text-center text-muted">
+            No lessons found.
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

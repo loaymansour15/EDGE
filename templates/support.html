@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Support{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="text-center mb-4 py-4 rounded"
+     style="background: linear-gradient(135deg, #111827, #1f2933); color: white;">
+    <h3 class="fw-bold mb-1">Support Center</h3>
+    <p class="mb-0 text-light">
+        تواصل معنا مباشرة على واتساب
+    </p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9">
+
+        <div class="card shadow border-0">
+            <div class="card-body p-4">
+
+                <h5 class="fw-bold mb-3 text-center">
+                    Contact via WhatsApp
+                </h5>
+
+                <!-- Form -->
+                <form onsubmit="sendWhatsApp(); return false;">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Subject</label>
+                        <input type="text"
+                               id="subject"
+                               class="form-control"
+                               placeholder="عنوان المشكلة"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Category</label>
+                        <select id="category" class="form-select" required>
+                            <option value="" disabled selected>اختر نوع المشكلة</option>
+                            <option value="Subscription / Payment">Subscription / Payment</option>
+                            <option value="Login / Account">Login / Account</option>
+                            <option value="Lessons / Scenarios">Lessons / Scenarios</option>
+                            <option value="Bug / Technical Issue">Bug / Technical Issue</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Message</label>
+                        <textarea id="message"
+                                  rows="5"
+                                  class="form-control"
+                                  placeholder="اشرح المشكلة بالتفصيل…"
+                                  required></textarea>
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-success w-100 py-2 fw-bold">
+                        💬 Open WhatsApp
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+        <!-- Info -->
+        <div class="text-center mt-4 text-muted small">
+            الرد غالبًا بيكون أسرع على واتساب  
+            <br>
+            ⏱ متاح يوميًا
+        </div>
+
+    </div>
+</div>
+
+<script>
+function sendWhatsApp() {
+    const subject = document.getElementById("subject").value;
+    const category = document.getElementById("category").value;
+    const message = document.getElementById("message").value;
+
+    const user = "{{ request.user.username|default:'Guest' }}";
+    const email = "{{ request.user.email|default:'-' }}";
+
+    const text =
+`🆘 *EDGE Support Request*
+
+👤 User: ${user}
+📧 Email: ${email}
+
+📌 Subject:
+${subject}
+
+📂 Category:
+${category}
+
+📝 Message:
+${message}
+`;
+
+    const phoneNumber = "201023449942"; // 👈 غير الرقم هنا
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`;
+
+    window.open(url, "_blank");
+}
+</script>
+
+{% endblock %}

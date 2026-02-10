@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Quiz{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-4" style="background-color: lightgray; width: 100%; padding: 40px 20px; border-radius: 8px;">
+    <h3 class="fw-bold">Quiz</h3>
+    <p class="text-muted mb-0">
+        اختبر فهمك قبل ما تكمل
+    </p>
+</div>
+
+{% include "partials/breadcrumb.html" with topic=topic page="Quiz" %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8 col-md-10">
+
+            {% for q in questions %}
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4">
+
+                    <!-- Question -->
+                    <p class="fw-bold mb-3" dir="rtl">
+                        {{ forloop.counter }}. {{ q.question }}
+                    </p>
+
+                    <!-- Options -->
+                    <div class="d-grid gap-2">
+                        {% for key, value in q.options.items %}
+                        <label class="btn btn-outline-dark text-end" dir="rtl">
+                            <input
+                                class="form-check-input me-2 "
+                                style="text-align: right;"
+                                type="radio"
+                                name="question_{{ q.id }}"
+                                value="{{ key }}"
+                                required
+                            >
+                            {{ value }}
+                        </label>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+            {% empty %}
+                <div class="text-center text-muted">
+                    No questions found.
+                </div>
+            {% endfor %}
+
+            <!-- Submit -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-dark btn-lg px-5">
+                    Submit Quiz
+                </button>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+{% endblock %}
