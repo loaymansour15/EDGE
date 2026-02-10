@@ -1,1 +1,1 @@
-web: gunicorn egx_derivatives_mvp.wsgi:application
+web: gunicorn config.wsgi:application
